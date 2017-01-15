@@ -8,6 +8,8 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.LinearLayout;
+import de.tobbexiv.pruefungsleistung.view.DisplayLocationView;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +28,9 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        LinearLayout content_main = (LinearLayout) findViewById(R.id.content_main);
+        //content_main.addView(new DisplayLocationView(this, "image.jpg", "Location Description", "Cell Id", "GPS"));
     }
 
     @Override
