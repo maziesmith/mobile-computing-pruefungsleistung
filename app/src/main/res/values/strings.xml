@@ -5,4 +5,7 @@
     <string name="title_activity_settings">Settings</string>
     <string name="setting_refresh_interval_title">Refresh interval</string>
     <string name="setting_refresh_interval_summary">Specify how often the widget should be refreshed.</string>
+
+    <string name="title_activity_camera">Camera</string>
+    <string name="camera_take_picture">Take picture</string>
 </resources>
