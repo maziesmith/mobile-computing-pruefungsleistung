@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_settings">Einstellungen</string>
+    <string name="camera_take_picture">Bild aufnehmen</string>
+    <string name="dialog_confirm">Ok</string>
+    <string name="dialog_description_message">Gib eine Beschreibung für den Ort ein</string>
+    <string name="dialog_description_title">Beschreibung</string>
+    <string name="dialog_options_selection_cancel">Abbrechen</string>
+    <string name="dialog_options_selection_delete">Löschen</string>
+    <string name="dialog_options_selection_update_description">Beschreibung aktualisieren</string>
+    <string name="dialog_options_selection_update_image">Bild aktualisieren</string>
+    <string name="dialog_options_title">Optionen</string>
+    <string name="display_location_view_cell_id">Zellen-Id: %1$s, LAC: %2$s</string>
+    <string name="setting_autostart_summary">Starte den Dialog zum hinzufügen neuer Zellen automatisch aus dem Hintergrund</string>
+    <string name="setting_autostart_title">Automatisch starten</string>
+    <string name="title_activity_camera">Kamera</string>
+    <string name="title_activity_settings">Einstellungen</string>
+    <string name="toast_gps_no_data">Noch kein GPS Standort verfügbar!</string>
+    <string name="toast_gps_not_started">Du musst Deine GPS Standortverfolgung starten!</string>
+    <string name="toast_need_all_permissions">Du musst alle Berechtigungen geben!</string>
+    <string name="toast_need_image">Du musst ein Bild für den neuen Ort bereitstellen!</string>
+    <string name="toast_position_exists">Diese Position existiert bereits!</string>
+    <string name="widget_unknown_location">Diese Zellen-Id ist unbekannt!</string>
+    <string name="toast_need_permission_for_background">Der Hintergrunddienst wird nicht funktionieren, wenn Du die Berechtigung nicht gibst!</string>
+    <string name="display_location_view_gps">GPS: %1$s</string>
+    <string name="setting_background_summary">Starte einen Dienst im Hintergrund, welche automatisch den Ort aktualisiert.</string>
+    <string name="setting_background_title">Hintergrunddienst starten</string>
+</resources>
