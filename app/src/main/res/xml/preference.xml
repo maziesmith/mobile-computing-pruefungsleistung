@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <ListPreference
-        android:title="@string/setting_refresh_interval_title"
-        android:summary="@string/setting_refresh_interval_summary"
-        android:key="refreshInterval"
-        android:defaultValue="5000"
-        android:entries="@array/refreshIntervalDescription"
-        android:entryValues="@array/refreshIntervalValues"
+    <CheckBoxPreference
+        android:title="@string/setting_autostart_title"
+        android:summary="@string/setting_autostart_summary"
+        android:key="startAutomatically"
+        android:defaultValue="false"
         />
 </PreferenceScreen>
