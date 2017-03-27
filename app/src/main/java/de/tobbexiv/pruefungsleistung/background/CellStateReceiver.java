@@ -9,6 +9,7 @@ import android.telephony.CellLocation;
 import android.telephony.PhoneStateListener;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
+import android.widget.Toast;
 
 import java.util.Map;
 
@@ -16,7 +17,7 @@ import de.tobbexiv.pruefungsleistung.MainActivity;
 import de.tobbexiv.pruefungsleistung.database.LocationDbHelper;
 import de.tobbexiv.pruefungsleistung.widget.WidgetProvider;
 
-public class PhoneStateReceiver extends BroadcastReceiver {
+public class CellStateReceiver extends BroadcastReceiver {
     private static boolean running = false;
 
     private TelephonyManager manager;
@@ -27,6 +28,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
         listener = new Listener(context);
 
+        Toast.makeText(context, "Test", Toast.LENGTH_LONG).show();
         if(!running) {
             manager.listen(listener, PhoneStateListener.LISTEN_CELL_LOCATION);
         }
@@ -38,6 +40,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
 
         public Listener(Context context) {
             this.context = context;
+            this.dbHelper = new LocationDbHelper(context);
         }
 
         @Override
@@ -50,15 +53,17 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 String lac = cell.getLac() + "";
 
                 Map<String, String> stored = dbHelper.getLocationByCellInfo(cellId, lac);
+                WidgetProvider.setLocationInformation(context, stored);
                 if(stored == null) {
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-                    if(preferences.getBoolean("startAutomatically", true)) {
+                    if(preferences.getBoolean("startAutomatically", false)) {
                         Intent intent = new Intent(context, MainActivity.class);
                         intent.putExtra("NEW_CELL", true);
+                        intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                        intent.setAction(Intent.ACTION_MAIN);
+                        intent.addCategory(Intent.CATEGORY_LAUNCHER);
                         context.startActivity(intent);
                     }
-                } else {
-                    WidgetProvider.setLocationInformation(context, stored);
                 }
             }
         }
