@@ -47,9 +47,13 @@
                 />
         </activity>
 
-        <receiver android:name=".background.PhoneStateReceiver">
+        <receiver android:name=".background.CellStateReceiver"
+                  android:enabled="true">
             <intent-filter>
-                <action android:name="android.intent.action.PHONE_STATE" />
+                <action android:name="de.tobbexiv.pruefungsleistung.StartCellChangeListener" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="de.tobbexiv.pruefungsleistung.StopCellChangeListener" />
             </intent-filter>
         </receiver>
 
@@ -63,6 +67,9 @@
                 android:resource="@xml/widget_provider"
                 />
         </receiver>
+
+        <service android:name=".background.CellStateService" />
+
     </application>
 
 </manifest>

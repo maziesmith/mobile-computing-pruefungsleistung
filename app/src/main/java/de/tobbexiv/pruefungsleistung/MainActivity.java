@@ -4,9 +4,11 @@ import android.Manifest;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.ActivityCompat;
@@ -26,6 +28,8 @@ import android.widget.Toast;
 import java.util.HashMap;
 import java.util.Map;
 
+import de.tobbexiv.pruefungsleistung.background.CellStateReceiver;
+import de.tobbexiv.pruefungsleistung.background.CellStateService;
 import de.tobbexiv.pruefungsleistung.camera.CameraActivity;
 import de.tobbexiv.pruefungsleistung.database.LocationDbHelper;
 import de.tobbexiv.pruefungsleistung.location.GPSLocation;
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     public static int CAMERA_ACTIVITY = 4711;
 
     private static final int REQUEST_APP_PERMISSIONS = 100;
+    private static final int REQUEST_BROADCAST_PERMISSIONS = 101;
 
     private TelephonyManager telephonyManager;
     private LocationDbHelper dbHelper;
@@ -75,9 +80,37 @@ public class MainActivity extends AppCompatActivity {
             addLocationToView(location);
         }
 
-        if(getIntent().getBooleanExtra("NEW_CELL", false)) {
-            startAddNewPosition();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{ Manifest.permission.READ_PHONE_STATE }, REQUEST_BROADCAST_PERMISSIONS);
         }
+
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        updateService(preferences);
+
+        preferences.registerOnSharedPreferenceChangeListener(
+        new SharedPreferences.OnSharedPreferenceChangeListener() {
+            public void onSharedPreferenceChanged(SharedPreferences preferences, String key) {
+                updateService(preferences);
+            }
+        });
+    }
+
+    private void updateService(SharedPreferences preferences) {
+        if(preferences.getBoolean("backgroundJob", false)) {
+            startService();
+        } else {
+            stopService();
+        }
+    }
+
+    private void startService() {
+        Intent serviceIntent = new Intent(this, CellStateService.class);
+        startService(serviceIntent);
+    }
+
+    private void stopService() {
+        Intent stopIntent = new Intent(MainActivity.this, CellStateService.class);
+        stopService(stopIntent);
     }
 
     @Override
@@ -129,17 +162,40 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if (requestCode == REQUEST_APP_PERMISSIONS) {
-            for (int i = 0; i < grantResults.length; i++) {
-                if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(this, R.string.toast_need_all_permissions, Toast.LENGTH_LONG).show();
-                    return;
+        switch (requestCode) {
+            case REQUEST_APP_PERMISSIONS:
+                for (int i = 0; i < grantResults.length; i++) {
+                    if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
+                        Toast.makeText(this, R.string.toast_need_all_permissions, Toast.LENGTH_LONG).show();
+                        return;
+                    }
                 }
-            }
-        }
 
-        startAddNewPosition();
+                startAddNewPosition();
+                return;
+            case REQUEST_BROADCAST_PERMISSIONS:
+                if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
+                    Toast.makeText(this, R.string.toast_need_permission_for_background, Toast.LENGTH_LONG).show();
+                }
+                return;
+        }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if(getIntent().getBooleanExtra("NEW_CELL", false)) {
+            startAddNewPosition();
+        }
+    }
+
+
 
     @Override
     protected void onDestroy() {

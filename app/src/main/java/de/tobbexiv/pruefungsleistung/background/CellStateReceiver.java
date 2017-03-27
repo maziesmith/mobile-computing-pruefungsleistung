@@ -18,6 +18,9 @@ import de.tobbexiv.pruefungsleistung.database.LocationDbHelper;
 import de.tobbexiv.pruefungsleistung.widget.WidgetProvider;
 
 public class CellStateReceiver extends BroadcastReceiver {
+    public static final String BROADCAST_START_CELL_CHANGE_LISTNER = "de.tobbexiv.pruefungsleistung.StartCellChangeListener";
+    public static final String BROADCAST_STOP_CELL_CHANGE_LISTNER = "de.tobbexiv.pruefungsleistung.StopCellChangeListener";
+
     private static boolean running = false;
 
     private TelephonyManager manager;
@@ -25,12 +28,19 @@ public class CellStateReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-        listener = new Listener(context);
+        if(manager == null || listener == null) {
+            manager = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            listener = new Listener(context);
+        }
 
-        Toast.makeText(context, "Test", Toast.LENGTH_LONG).show();
-        if(!running) {
+        String action = intent.getAction();
+
+        if(!running && action.equals(BROADCAST_START_CELL_CHANGE_LISTNER)) {
             manager.listen(listener, PhoneStateListener.LISTEN_CELL_LOCATION);
+            running = true;
+        } else if(running && action.equals(BROADCAST_STOP_CELL_CHANGE_LISTNER)) {
+            manager.listen(listener, PhoneStateListener.LISTEN_NONE);
+            running = false;
         }
     }
 

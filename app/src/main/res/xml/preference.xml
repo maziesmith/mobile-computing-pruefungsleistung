@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <CheckBoxPreference
+        android:title="@string/setting_background_title"
+        android:summary="@string/setting_background_summary"
+        android:key="backgroundJob"
+        android:defaultValue="false"
+        />
+    <CheckBoxPreference
         android:title="@string/setting_autostart_title"
         android:summary="@string/setting_autostart_summary"
         android:key="startAutomatically"

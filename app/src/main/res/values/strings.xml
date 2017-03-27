@@ -1,16 +1,19 @@
 <resources>
-    <string name="app_name">GSM Cell Tracker</string>
+    <string name="app_name" translatable="false">GSM Cell Tracker</string>
 
     <string name="action_settings">Settings</string>
 
     <string name="title_activity_settings">Settings</string>
+    <string name="setting_background_title">Run background job</string>
+    <string name="setting_background_summary">Run a background job to automatically update the location.</string>
     <string name="setting_autostart_title">Start automatically</string>
-    <string name="setting_autostart_summary">Start the dialog to add a new cell automatically.</string>
+    <string name="setting_autostart_summary">Start the dialog to add a new cell automatically from background.</string>
 
     <string name="title_activity_camera">Camera</string>
     <string name="camera_take_picture">Take picture</string>
 
     <string name="toast_need_all_permissions">You need to grant all permissions!</string>
+    <string name="toast_need_permission_for_background">The background service will not work if you don\'t grant the permission!</string>
     <string name="toast_need_image">You must provide an image for the new location!</string>
     <string name="toast_position_exists">This position already exists!</string>
     <string name="toast_gps_not_started">You must start your GPS tracking!</string>
