@@ -18,13 +18,19 @@ public class DisplayLocationView extends LinearLayout {
 
     private ImageView mImage;
     private TextView mLocationDescription;
-    private TextView mCellId;
+    private TextView mCellIdLac;
     private TextView mGpsData;
+
+    private String locationId;
+    private String cellId;
+    private String lac;
+    private String imageSrc;
 
     public DisplayLocationView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
         setOrientation(LinearLayout.HORIZONTAL);
+        setPadding(5, 5, 5, 5);
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.view_display_location, this, true);
@@ -34,21 +40,23 @@ public class DisplayLocationView extends LinearLayout {
         if (attrs != null) {
             TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.DisplayLocationView, 0, 0);
 
+            String locationId = a.getString(R.styleable.DisplayLocationView_locationId);
             String imageSrc = a.getString(R.styleable.DisplayLocationView_imageSrc);
             String locationDescription = a.getString(R.styleable.DisplayLocationView_locationDescription);
             String cellId = a.getString(R.styleable.DisplayLocationView_cellId);
+            String lac = a.getString(R.styleable.DisplayLocationView_lac);
             String gpsData = a.getString(R.styleable.DisplayLocationView_gpsData);
 
             a.recycle();
 
-            update(imageSrc, locationDescription, cellId, gpsData);
+            update(locationId, cellId, lac, locationDescription, imageSrc, gpsData);
         }
     }
 
-    public DisplayLocationView(Context context, String imageSrc, String locationDescription, String cellId, String gpsData) {
+    public DisplayLocationView(Context context, String locationId, String cellId, String lac, String locationDescription, String imageSrc, String gpsData) {
         this(context);
 
-        update(imageSrc, locationDescription, cellId, gpsData);
+        update(locationId, cellId, lac, locationDescription, imageSrc, gpsData);
     }
 
     public DisplayLocationView(Context context) {
@@ -59,19 +67,21 @@ public class DisplayLocationView extends LinearLayout {
         mImage = (ImageView) getChildAt(0);
         LinearLayout l1 = (LinearLayout) getChildAt(1);
         mLocationDescription = (TextView) l1.getChildAt(0);
-        LinearLayout l2 = (LinearLayout) l1.getChildAt(1);
-        mCellId = (TextView) l2.getChildAt(0);
-        mGpsData = (TextView) l2.getChildAt(1);
+        mCellIdLac = (TextView) l1.getChildAt(1);
+        mGpsData = (TextView) l1.getChildAt(2);
     }
 
-    private void update(String imageSrc, String locationDescription, String cellId, String gpsData) {
+    private void update(String locationId, String cellId, String lac, String locationDescription, String imageSrc, String gpsData) {
+        this.locationId = locationId;
         updateImageSrc(imageSrc);
         updateLocationDescription(locationDescription);
-        updateCellId(cellId);
+        updateCellId(cellId, lac);
         updateGpsData(gpsData);
     }
 
     public void updateImageSrc(String imageSrc) {
+        this.imageSrc = imageSrc;
+
         File imgFile = new File(imageSrc);
 
         if (imgFile.exists()) {
@@ -84,12 +94,30 @@ public class DisplayLocationView extends LinearLayout {
         mLocationDescription.setText(locationDescription);
     }
 
-    public void updateCellId(String cellId) {
-        mCellId.setText(cellId);
+    public void updateCellId(String cellId, String lac) {
+        this.cellId = cellId;
+        this.lac = lac;
+        mCellIdLac.setText(getContext().getString(R.string.display_location_view_cell_id, cellId, lac));
     }
 
     public void updateGpsData(String gpsData) {
-        mGpsData.setText(gpsData);
+        mGpsData.setText(getContext().getString(R.string.display_location_view_gps, gpsData));
+    }
+
+    public void redrawImage() {
+        updateImageSrc(imageSrc);
+    }
+
+    public String getLocationId() {
+        return locationId;
+    }
+
+    public String getCellId() {
+        return cellId;
+    }
+
+    public String getLac() {
+        return lac;
     }
 
 }
