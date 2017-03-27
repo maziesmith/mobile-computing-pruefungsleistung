@@ -1,11 +1,32 @@
 <resources>
-    <string name="app_name">Pruefungsleistung</string>
+    <string name="app_name">GSM Cell Tracker</string>
+
     <string name="action_settings">Settings</string>
 
     <string name="title_activity_settings">Settings</string>
-    <string name="setting_refresh_interval_title">Refresh interval</string>
-    <string name="setting_refresh_interval_summary">Specify how often the widget should be refreshed.</string>
+    <string name="setting_autostart_title">Start automatically</string>
+    <string name="setting_autostart_summary">Start the dialog to add a new cell automatically.</string>
 
     <string name="title_activity_camera">Camera</string>
     <string name="camera_take_picture">Take picture</string>
+
+    <string name="toast_need_all_permissions">You need to grant all permissions!</string>
+    <string name="toast_need_image">You must provide an image for the new location!</string>
+    <string name="toast_position_exists">This position already exists!</string>
+    <string name="toast_gps_not_started">You must start your GPS tracking!</string>
+    <string name="toast_gps_no_data">No GPS location available yet!</string>
+
+    <string name="dialog_description_title">Description</string>
+    <string name="dialog_description_message">Enter a description for the location</string>
+    <string name="dialog_options_title">Options</string>
+    <string name="dialog_options_selection_update_description">Update description</string>
+    <string name="dialog_options_selection_update_image">Update image</string>
+    <string name="dialog_options_selection_delete">Delete</string>
+    <string name="dialog_options_selection_cancel">Cancel</string>
+    <string name="dialog_confirm">Ok</string>
+
+    <string name="display_location_view_cell_id">Cell ID: %1$s, LAC: %2$s</string>
+    <string name="display_location_view_gps">GPS: %1$s</string>
+
+    <string name="widget_unknown_location">This cell id is unknown!</string>
 </resources>
