@@ -99,13 +99,10 @@ public class Camera {
         try {
             cameraCaptureSession.stopRepeating();
 
-            int outputWidth  = 480;
-            int outputHeight = 640;
+            Size previewSize = getPreviewSize();
 
-            if (outputSizes != null && outputSizes.length > 0) {
-                outputWidth = outputSizes[0].getWidth();
-                outputHeight = outputSizes[0].getHeight();
-            }
+            int outputWidth  = previewSize.getWidth();
+            int outputHeight = previewSize.getHeight();
 
             reader = ImageReader.newInstance(outputWidth, outputHeight, ImageFormat.JPEG, 5);
 
@@ -159,7 +156,7 @@ public class Camera {
 
         try {
             SurfaceTexture texture = activity.getPreviewSurfaceTexture();
-            texture.setDefaultBufferSize(outputSizes[0].getWidth(), outputSizes[0].getHeight());
+            texture.setDefaultBufferSize(getPreviewSize().getWidth(), getPreviewSize().getHeight());
 
             Surface surface = new Surface(texture);
 
@@ -173,6 +170,7 @@ public class Camera {
                         return;
                     }
                     captureRequestBuilder.set(CaptureRequest.CONTROL_MODE, CameraMetadata.CONTROL_MODE_AUTO);
+                    captureRequestBuilder.set(CaptureRequest.JPEG_ORIENTATION, activity.getOrientation());
                     cameraCaptureSession = ccs;
                     try {
                         cameraCaptureSession.setRepeatingRequest(captureRequestBuilder.build(), null, activity.getBackgroundHandler());
@@ -186,6 +184,14 @@ public class Camera {
             }, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
+        }
+    }
+
+    public Size getPreviewSize() {
+        if (outputSizes != null && outputSizes.length > 0) {
+            return outputSizes[0];
+        } else {
+            return new Size(480, 640);
         }
     }
 

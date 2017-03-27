@@ -3,6 +3,8 @@ package de.tobbexiv.pruefungsleistung.camera;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Matrix;
+import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
 import android.hardware.camera2.CameraManager;
 import android.os.Bundle;
@@ -10,6 +12,7 @@ import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
@@ -34,7 +37,39 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         @Override
-        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {}
+        public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
+            Size previewSize = camera.getPreviewSize();
+
+            if (preview == null || previewSize == null) {
+                return;
+            }
+
+            int rotation = getWindowManager().getDefaultDisplay().getRotation();
+
+            Matrix matrix = new Matrix();
+            RectF viewRect = new RectF(0, 0, width, height);
+            RectF bufferRect = new RectF(0, 0, previewSize.getHeight(), previewSize.getWidth());
+
+            float centerX = viewRect.centerX();
+            float centerY = viewRect.centerY();
+
+            if (Surface.ROTATION_90 == rotation || Surface.ROTATION_270 == rotation) {
+                bufferRect.offset(centerX - bufferRect.centerX(), centerY - bufferRect.centerY());
+
+                matrix.setRectToRect(viewRect, bufferRect, Matrix.ScaleToFit.FILL);
+
+                float scale = Math.max(
+                        (float) width / previewSize.getHeight(),
+                        (float) height / previewSize.getWidth());
+                matrix.postScale(scale, scale, centerX, centerY);
+
+                matrix.postRotate(90 * (rotation - 2), centerX, centerY);
+            } else if (Surface.ROTATION_180 == rotation) {
+                matrix.postRotate(180, centerX, centerY);
+            }
+
+            preview.setTransform(matrix);
+        }
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
@@ -101,7 +136,7 @@ public class CameraActivity extends AppCompatActivity {
         if (requestCode == REQUEST_APP_PERMISSIONS) {
             for (int i = 0; i < grantResults.length; i++) {
                 if (grantResults[i] == PackageManager.PERMISSION_DENIED) {
-                    Toast.makeText(CameraActivity.this, "You need to grant all permissions!", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CameraActivity.this, R.string.toast_need_all_permissions, Toast.LENGTH_LONG).show();
                     finish();
                     return;
                 }
