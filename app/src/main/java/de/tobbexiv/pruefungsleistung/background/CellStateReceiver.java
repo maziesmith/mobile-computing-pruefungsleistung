@@ -23,8 +23,8 @@ public class CellStateReceiver extends BroadcastReceiver {
 
     private static boolean running = false;
 
-    private TelephonyManager manager;
-    private Listener listener;
+    private static TelephonyManager manager;
+    private static Listener listener;
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -75,6 +75,8 @@ public class CellStateReceiver extends BroadcastReceiver {
                         context.startActivity(intent);
                     }
                 }
+            } else if(location == null) {
+                WidgetProvider.setLocationInformation(context, null);
             }
         }
     }
