@@ -243,24 +243,37 @@ public class MainActivity extends AppCompatActivity {
         }
 
         newPosition = new HashMap<>();
-        getCellInformation();
+        if(!getCellInformation()) {
+            newPosition = null;
+            updateWidget();
+            return;
+        }
         if(dbHelper.getLocationByCellInfo(newPosition.get(Location.COLUMN_NAME_CELL_ID), newPosition.get(Location.COLUMN_NAME_LAC)) != null) {
             Toast.makeText(this, R.string.toast_position_exists, Toast.LENGTH_LONG).show();
             newPosition = null;
+            updateWidget();
             return;
         }
         if(!getGpsInformation()) {
             newPosition = null;
+            updateWidget();
             return;
         }
         getDescription();
     }
 
-    private void getCellInformation() {
+    private boolean getCellInformation() {
         GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+
+        if(cellLocation == null) {
+            Toast.makeText(this, R.string.toast_cell_info_not_available, Toast.LENGTH_LONG).show();
+            return false;
+        }
 
         newPosition.put(Location.COLUMN_NAME_CELL_ID, cellLocation.getCid() + "");
         newPosition.put(Location.COLUMN_NAME_LAC, cellLocation.getLac() + "");
+
+        return true;
     }
 
     private boolean getGpsInformation() {
@@ -371,11 +384,14 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateWidget() {
         GsmCellLocation cellLocation = (GsmCellLocation) telephonyManager.getCellLocation();
+        Map<String, String> location = null;
 
-        String cellId = cellLocation.getCid() + "";
-        String lac = cellLocation.getLac() + "";
+        if(cellLocation != null) {
+            String cellId = cellLocation.getCid() + "";
+            String lac = cellLocation.getLac() + "";
 
-        Map<String, String> location = dbHelper.getLocationByCellInfo(cellId, lac);
+            location = dbHelper.getLocationByCellInfo(cellId, lac);
+        }
         WidgetProvider.setLocationInformation(this, location);
     }
 }

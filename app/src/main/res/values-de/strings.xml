@@ -25,4 +25,5 @@
     <string name="display_location_view_gps">GPS: %1$s</string>
     <string name="setting_background_summary">Starte einen Dienst im Hintergrund, welche automatisch den Ort aktualisiert.</string>
     <string name="setting_background_title">Hintergrunddienst starten</string>
+    <string name="toast_cell_info_not_available">Keine Zellen-Information verfügbar! Ist ihr Netzwerk ausgeschaltet?</string>
 </resources>
